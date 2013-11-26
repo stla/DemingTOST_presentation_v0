@@ -1,0 +1,343 @@
+---
+title       : Testing equivalence with Deming regression
+subtitle    : How and why ? - preliminary version
+author      : Stéphane Laurent
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [bootstrap, mathjax]          
+mode        : selfcontained # {standalone, draft}
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+library(ggplot2)
+library(scales)
+library(car)
+source("assets/R/slidify_macros.R")
+source("assets/R/graphics_macros.R")
+source("assets/R/myDeming_v0.R")
+load("D:/Github/DemingTOST_presentation_v0/assets/R/SIMS_DEMINGTOST.RData")
+set.seed(666)
+a <- 3; b <- 0.8
+n <- 25
+mu <- 1:n 
+x <- rnorm(n,mu)
+y <- rnorm(n,a+b*mu)
+```
+
+
+## Background  
+  
+- **Context**: method comparison 
+
+- **Data**: sample of paired data $(x_i,y_i)$ (e.g. $x_i$ and $y_i$ measurements in Labo $A$ and Labo $B$)
+
+- **Particularity**: Equivalence on a practical range of magnitude 
+
+- **Two ways of testing equivalence**: TOST or Deming regression ?
+
+
+<div class="title_box" id="bill_to">
+    <div id="title">Why this recommendation ?</div>
+    <div id="content">
+        Use Deming because data are recorded over a range of magnitude
+    </div>
+</div>
+
+
+
+--- &twocolcustomwidth
+
+## Using TOST: theoretical requirements
+
+*** =left
+
+### Theoretical requirements
+
+- For TOST, we assume $y_i-x_i \sim_{iid} {\cal N}(\mu,\sigma^2)$ (possibly after log-transforming)
+
+- The common way to check this assumption is the qqplot:
+
+```{r, echo=FALSE, fig.height=5, fig.width=5, cache=FALSE}
+par(mar=c(4,3,1,1))
+qqPlot(y-x, main='qqplot with "car" package')
+```
+
+*** =right
+
+### Scatterplot of  $(x_i,y_i)$
+
+- What should we expect to see on a scatterplot of $x$ vs $y$ ? 
+
+```{r, echo=FALSE, fig.height=5.8, fig.width=5.8, cache=FALSE}
+par(mar=c(2,3,1,1))
+fit <- deming.estim(x,y)
+plot(x,y, xlab="x", ylab="y", pch=19, asp=1, xlim=c(0,n+1), ylim=c(0,n+1),
+     main="", axes=FALSE, cex=2, cex.lab=2)
+axis(1, cex.axis=2)
+axis(2, cex.axis=2)
+abline(fit$alpha, fit$beta, lty="dashed", col="red", lwd=2.5)
+abline(0, 1, lty="solid", col="blue", lwd=2.5)
+```
+
+- What is the blue line ? The red line ? 
+
+--- &twocolcustomwidth
+
+## Practical requirements - and another look at the model 
+
+*** =left
+
+- Measurements $(x_i,y_i)$ must be sampled over a practical range of magnitude: 
+
+  - each $x_i$ is randomy distributed around its own mean value $x^*_i$
+
+  - each $y_i$ is randomy distributed around its own mean value $y^*_i$
+
+- Model: 
+
+$$\large \begin{cases}
+x_i = x^*_i + \epsilon_i \\
+y_i = y^*_i + \epsilon'_i \\
+\boxed{y^*_i = x^*_i + a} 
+\end{cases}
+$$
+where the error terms $\epsilon_i,\epsilon'_i$ have constant variance
+
+
+*** =right
+
+```{r, fig.width=7, fig.height=7, echo=FALSE, cache=FALSE}
+par(mar=c(0,4,0,1))
+AV2plot(xstar=x[1:6],ystar=x[1:6]+1, lims=range(x[1:6])+c(-3,3), cex.axis=1.1, inset=0, cex=1.5, k=1.25)
+```
+
+`r textbox("*What this model is known as ?*")`
+
+
+
+
+
+--- #thisslide &twocolcustomwidth
+
+
+
+
+## Equivalence with AV2 without interaction 
+
+```{r, echo=FALSE,cache=FALSE}
+dat <- data.frame(sample=factor(1:length(x)), "A"=x, "B"=y, check.names=FALSE)
+options(width=27)
+```
+
+*** =left width:44%
+```{r, echo=TRUE}
+head(dat)
+library(reshape2)
+mdat <- melt(dat, id.vars=c("sample"), 
+                       variable.name="labo")
+head(mdat)
+```
+
+*** =right width:52%
+```{r, echo=FALSE,cache=FALSE}
+options(width=40)
+```
+```{r, echo=TRUE}
+t.test(x=dat$A, y=dat$B, paired=TRUE)$conf
+confint(lm(value~labo+sample,data=mdat))
+```
+
+<style>#thisslide
+code {
+font-size: 80%;
+}
+</style>
+
+
+--- 
+
+## TOST requirement as a $H_0$ hypothesis 
+
+- Statistical checking of a distributional hypothesis is done by hypothesis testing:
+
+- $$H_0 \colon \large \begin{cases}
+x_i = x^*_i + \epsilon_i \\
+y_i = y^*_i + \epsilon'_i \\
+\boxed{y^*_i = x^*_i + a}
+\end{cases}$$ 
+
+- $$H_1 \colon \large \begin{cases}
+x_i = x^*_i + \epsilon_i \\
+y_i = y^*_i + \epsilon'_i \\
+\boxed{y^*_i = f(x^*_i)} 
+\end{cases}$$ 
+
+- Taking $\large\boxed{f(x^*_i) = a + bx^*_i}$ then $H_1$ is the Deming regression model 
+
+- Model $H_0$ is a particular case of Deming regression with $b=1$ 
+
+
+--- &twocolcustomwidth
+
+## Deming as a generalization of AV2 without interaction
+
+*** =left
+
+```{r DemingModel, fig.width=7, fig.height=7, cache=FALSE, echo=FALSE}
+plot(0,0, xlab="x", ylab="y", type="n",  xlim=c(0,n+1), ylim=c(0,n+1),
+     main="", axes=FALSE, cex=2, cex.lab=2, xaxs="i",yaxs="i")
+axis(1, col="gray")
+axis(2, col="gray")
+abline(a=0,b=1,lty=2,col="blue",lwd=2)
+abline(a=a,b=b, lty=2, col="green",lwd=2)
+x0 <- 10; y0 <- a+b*x0
+points(x0,y0,cex=1.6,pch=19)
+sigma <- 1
+interval <- x0 + 4*c(-1,1)*sigma
+k <- 8
+curve(k*dnorm(x,x0), from=interval[1], to=interval[2], col="blue", add=TRUE, lwd=3)
+rotat.dnorm(0,y0,k=k,col="green", lwd=3)
+segments(x0,0,x0,y0,lty="dotted")
+segments(x0,y0,0,y0,lty="dotted")
+ text(x0,y0,
+      expression(group("(",list(italic(x)^symbol("\052"),italic(y)^symbol("\052")),")")),
+      pos=3, cex=2)
+#for(i in 1:n){ # arranger rotat.dnorm (trait gris pour voir le support)
+#  rotat.dnorm(mu[i],mu[i],k=3,col="blue")
+#  rotat.dnorm(mu[i],a+b*mu[i],k=3,col="green")
+#}
+
+```
+
+*** =right 
+
+```{r DAV2plot, cache=FALSE, echo=FALSE,  fig.width=7, fig.height=7}
+xstar <- c(0.5, 2, 4, 5.5, 7)
+ystar <- a+b*xstar
+par(mar=c(3,4,6,1))
+DAV2plot(xstar, ystar, lims=c(-1,14), cex.axis=1.3, cex=1.5, k=1.2, inset=-0.2)
+axis(1)
+abline(a=0,b=1,lty=2,col="blue",lwd=2)
+abline(a=-a/b,b=1/b, lty=2, col="green",lwd=2)
+```
+
+
+*** =fullwidth
+
+
+--- 
+
+## Testing equivalence with Deming: 1) what ? 
+
+Equivalence should be assessed at the **boundary** of the range:
+
+```{r fig.width=9, fig.height=8, echo=FALSE}
+set.seed(421)
+m <- 30
+mu <- rep(1:m, times=7)
+n <- length(mu)
+fplot <- function(a,b,sigma0){
+  x <- rnorm(n, mu, sigma0)
+  y <- rnorm(n, a+b*mu, sigma0)
+  plot(-10:42, -10:42, asp=1, type="n", xlab="x", ylab="y", axes=FALSE)
+  abline(0,1,lwd=2.5)
+  axis(1, at=seq(-10,40,by=10))
+  axis(2)
+  points(x,y, pch="+", col="cyan")
+  #K <- sqrt(2)
+  #abline(K*sigma0, 1, col="green", lty="dashed", lwd=2)
+  #abline(-K*sigma0, 1, col="green", lty="dashed", lwd=2)
+  abline(c(a,b), lty=2, lwd=2.5, col="red")
+  segments(mu[m], mu[m], mu[m], crossprod(c(a,b), c(1, mu[m])), col="green", lwd=2)
+  m <- 1
+  segments(mu[m], mu[m], mu[m], crossprod(c(a,b), c(1, mu[m])), col="green", lwd=2)
+  abline(v=1, lty="dotted")
+  abline(v=30, lty="dotted")
+}
+layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
+b <- 1.5
+a <- -8
+sigma0 <- 2
+fplot(a,b,sigma0)
+b <- 1.6
+a <- -5.5
+sigma0 <- 2
+fplot(a,b,sigma0)
+b <- 1.1
+a <- -3.5
+sigma0 <- 2
+fplot(a,b,sigma0)
+b <- 0.8
+a <- 5.5
+sigma0 <- 2
+fplot(a,b,sigma0)
+```
+
+
+--- 
+
+## Testing equivalence with Deming: 2) how ? 
+
+- Everything is already done in our SAS application:
+
+![figure_complab_deming_table.png](assets/img/figure_complab_deming_table.png)
+
+
+--- #slidepower &twocolcustomwidth
+
+```{r, echo=FALSE, cache=FALSE}
+options(width=70)
+```
+
+
+## Comparing TOST and Deming 
+
+If TOST requirements hold true and if we use Deming regression then we dramatically loose power  
+
+<u>**Example with $\Delta=2$ :**</u>
+
+*** =left 
+
+$\sigma^2_x + \sigma^2_y = 4$ 
+
+```{r, echo=FALSE}
+lapply(SIMS_DEMINGTOST[[1]], function(x) round(100*x,1))
+```
+
+*** =right
+
+$\sigma^2_x + \sigma^2_y = 8$ 
+
+```{r, echo=FALSE}
+lapply(SIMS_DEMINGTOST[[2]], function(x) round(100*x,1))
+```
+
+*** =fullwidth 
+
+*Other advantage of TOST*: no need to specify the ratio of the variances $\lambda$ ! 
+
+<style>#slidepower
+code {
+font-size: 62%;
+font-family: "Source Code Pro", monospace;
+color: 
+darkRed;
+background-color: 
+seaShell;
+}
+</style>
+
+--- 
+
+## Conclusions 
+
+- Bridging of methods should be considered as equivalence between the means: bridging of Labo A vs Labo A should always be accepted as long as there is a sufficient amount of data
+
+- Currently the methodology of the SAS application is based on prediction intervals; it does not guarantee a succesful bridging of Labo A vs Labo A 
+
+- Generally the estimated slope is near from $1$; we could use TOST instead of Deming, and gain a considerable power
+
+- Work: define a rule to decide when to use TOST instead of Deming

@@ -1,0 +1,65 @@
+.leftcol {
+  float: left;
+  width: 48%;
+}
+.rightcol {
+  float: right;
+  width: 48%;
+}
+
+
+
+warnbox  {
+	display: block;
+	line-height: 1.5;
+	border: 1px solid darkRed;
+  font-family: 'Inconsolata', 'Courier New', monospace;
+  font-size: 24px;
+  line-height: 28px;
+  padding: 0px 0 10px 60px;
+  letter-spacing: 0px;
+  margin-bottom: 0px;
+	width: 90%;
+  left: 60px;
+  position: relative;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: seaShell;
+  color: darkRed;
+  /*overflow: hidden;*/
+}
+
+.title_box { 
+	display: block;
+    border: 1px dotted darkRed; 
+	border-radius: 50px;
+	width: 90%;
+	background-color: white;
+	left: 60px;
+	position: relative;
+	margin-top: 60px;
+}
+.title_box #title { 
+	border: 1px dotted darkRed;
+	border-radius: 10px;
+    position: relative; 
+	padding: 5px 5px 5px 5px;
+    top : -0.5em;
+    margin-left: 2em;
+    display: inline; 
+    background-color: seaShell; 
+	font-family: Calibri;
+	color: darkRed;
+	font-style:italic;
+}
+.title_box #content {
+	padding: 5px 25px 25px 25px;
+	line-height: 28px;
+	color: darkRed;
+	font-family: Georgia,'Comic Sans';
+	font-style:italic;
+}
+
