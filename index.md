@@ -1,6 +1,6 @@
 ---
 title       : Testing equivalence with Deming regression
-subtitle    : How and why ? - preliminary version
+subtitle    : How and why ?
 author      : Stéphane Laurent
 job         : 
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
@@ -236,14 +236,33 @@ y_i = y^*_i + \epsilon'_i \\
 *** =fullwidth
 
 
---- 
+--- #testingwhat &twocolcustomwidth
 
 ## Testing equivalence with Deming: 1) what ? 
+
+*** =left width:44%
 
 Equivalence should be assessed at the **boundary** of the range:
 
 ![plot of chunk unnamed-chunk-8](assets/fig/unnamed-chunk-8.png) 
 
+
+*** =right width:53%
+
+Extract from a Word file in our Q hard drive:
+
+<img src="assets/img/dochelene.jpg"  style="border:solid;width:107%"/>
+
+
+$\implies$ <span style="border-style:solid;border-width:3px;border-color:seaShell;background-color:#FCDFFF;font-size:25px">*Why to use a criterion based on prediction intervals ??*</span>
+
+
+
+<style>#testingwhat
+img {
+max-width: 200%;
+}
+</style>
 
 
 --- 
@@ -321,7 +340,7 @@ $\sigma^2_x + \sigma^2_y = 8$
 
 *** =fullwidth 
 
-*Other advantage of TOST*: no need to specify the ratio of the variances $\lambda$ ! 
+<u>*Other advantage of TOST*</u>: no need to specify the ratio of the variances $\lambda$ ! 
 
 <style>#slidepower
 code {
@@ -344,4 +363,6 @@ seaShell;
 
 - Generally the estimated slope is near from $1$; we could use TOST instead of Deming, and gain a considerable power
 
-- Work: define a rule to decide when to use TOST instead of Deming
+- *Work to achieve*: define a rule to decide when to use TOST instead of Deming
+ - Testing $H_0\colon$*{slope=1}* ?  dangerous for large sample sizes and doesn't sound sensible: the impact of the slope depends on the range ! 
+ - Proposal: use a rule based on the difference between the two deviations at the boundary of the range

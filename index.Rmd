@@ -1,6 +1,6 @@
 ---
 title       : Testing equivalence with Deming regression
-subtitle    : How and why ? - preliminary version
+subtitle    : How and why ?
 author      : Stéphane Laurent
 job         : 
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
@@ -18,7 +18,7 @@ library(car)
 source("assets/R/slidify_macros.R")
 source("assets/R/graphics_macros.R")
 source("assets/R/myDeming_v0.R")
-load("D:/Github/DemingTOST_presentation_v0/assets/R/SIMS_DEMINGTOST.RData")
+load("assets/R/SIMS_DEMINGTOST.RData")
 set.seed(666)
 a <- 3; b <- 0.8
 n <- 25
@@ -228,13 +228,15 @@ abline(a=-a/b,b=1/b, lty=2, col="green",lwd=2)
 *** =fullwidth
 
 
---- 
+--- #testingwhat &twocolcustomwidth
 
 ## Testing equivalence with Deming: 1) what ? 
 
+*** =left width:44%
+
 Equivalence should be assessed at the **boundary** of the range:
 
-```{r fig.width=9, fig.height=8, echo=FALSE}
+```{r fig.width=6.5, fig.height=6.5, echo=FALSE}
 set.seed(421)
 m <- 30
 mu <- rep(1:m, times=7)
@@ -257,6 +259,7 @@ fplot <- function(a,b,sigma0){
   abline(v=1, lty="dotted")
   abline(v=30, lty="dotted")
 }
+par(mar=c(2,1,2,2))
 layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
 b <- 1.5
 a <- -8
@@ -276,6 +279,23 @@ sigma0 <- 2
 fplot(a,b,sigma0)
 ```
 
+*** =right width:53%
+
+Extract from a Word file in our Q hard drive:
+
+<img src="assets/img/dochelene.jpg"  style="border:solid;width:107%"/>
+
+
+$\implies$ `r textbox("*Why to use a criterion based on prediction intervals ??*")`
+
+
+
+<style>#testingwhat
+img {
+max-width: 200%;
+}
+</style>
+
 
 --- 
 
@@ -289,7 +309,7 @@ fplot(a,b,sigma0)
 --- #slidepower &twocolcustomwidth
 
 ```{r, echo=FALSE, cache=FALSE}
-options(width=70)
+options(width=72)
 ```
 
 
@@ -317,7 +337,7 @@ lapply(SIMS_DEMINGTOST[[2]], function(x) round(100*x,1))
 
 *** =fullwidth 
 
-*Other advantage of TOST*: no need to specify the ratio of the variances $\lambda$ ! 
+<u>*Other advantage of TOST*</u>: no need to specify the ratio of the variances $\lambda$ ! 
 
 <style>#slidepower
 code {
@@ -340,4 +360,6 @@ seaShell;
 
 - Generally the estimated slope is near from $1$; we could use TOST instead of Deming, and gain a considerable power
 
-- Work: define a rule to decide when to use TOST instead of Deming
+- *Work to achieve*: define a rule to decide when to use TOST instead of Deming
+ - Testing $H_0\colon$*{slope=1}* ?  dangerous for large sample sizes and doesn't sound sensible: the impact of the slope depends on the range ! 
+ - Proposal: use a rule based on the difference between the two deviations at the boundary of the range

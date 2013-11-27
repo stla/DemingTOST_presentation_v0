@@ -36,7 +36,7 @@
         <slide class="title-slide segue nobackground">
   <hgroup class="auto-fadein">
     <h1>Testing equivalence with Deming regression</h1>
-    <h2>How and why ? - preliminary version</h2>
+    <h2>How and why ?</h2>
     <p>Stéphane Laurent<br/></p>
   </hgroup>
   <article></article>  
@@ -280,15 +280,35 @@ y_i = y^*_i + \epsilon'_i \\
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="testingwhat" style="background:;">
   <hgroup>
     <h2>Testing equivalence with Deming: 1) what ?</h2>
   </hgroup>
   <article data-timings="">
-    <p>Equivalence should be assessed at the <strong>boundary</strong> of the range:</p>
+    
+<div class='leftcol' style='width:44%;'>
+  <p>Equivalence should be assessed at the <strong>boundary</strong> of the range:</p>
 
 <p><img src="assets/fig/unnamed-chunk-8.png" alt="plot of chunk unnamed-chunk-8"> </p>
 
+</div>
+<div class='rightcol' style='width:53%;'>
+  <p>Extract from a Word file in our Q hard drive:</p>
+
+<p><img src="assets/img/dochelene.jpg"  style="border:solid;width:107%"/></p>
+
+<p>\(\implies\) <span style="border-style:solid;border-width:3px;border-color:seaShell;background-color:#FCDFFF;font-size:25px"><em>Why to use a criterion based on prediction intervals ??</em></span></p>
+
+<style>#testingwhat
+img {
+max-width: 200%;
+}
+</style>
+
+</div>
+<div style='clear:both'>
+  
+</div>
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -364,7 +384,7 @@ y_i = y^*_i + \epsilon'_i \\
 
 </div>
 <div style='clear:both'>
-  <p><em>Other advantage of TOST</em>: no need to specify the ratio of the variances \(\lambda\) ! </p>
+  <p><u><em>Other advantage of TOST</em></u>: no need to specify the ratio of the variances \(\lambda\) ! </p>
 
 <style>#slidepower
 code {
@@ -391,7 +411,12 @@ seaShell;
 <li><p>Bridging of methods should be considered as equivalence between the means: bridging of Labo A vs Labo A should always be accepted as long as there is a sufficient amount of data</p></li>
 <li><p>Currently the methodology of the SAS application is based on prediction intervals; it does not guarantee a succesful bridging of Labo A vs Labo A </p></li>
 <li><p>Generally the estimated slope is near from \(1\); we could use TOST instead of Deming, and gain a considerable power</p></li>
-<li><p>Work: define a rule to decide when to use TOST instead of Deming</p></li>
+<li><p><em>Work to achieve</em>: define a rule to decide when to use TOST instead of Deming</p>
+
+<ul>
+<li>Testing \(H_0\colon\)<em>{slope=1}</em> ?  dangerous for large sample sizes and doesn&#39;t sound sensible: the impact of the slope depends on the range ! </li>
+<li>Proposal: use a rule based on the difference between the two deviations at the boundary of the range</li>
+</ul></li>
 </ul>
 
   </article>
